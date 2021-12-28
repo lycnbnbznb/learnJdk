@@ -57,6 +57,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * including threads, consumed when executing a collection of tasks.
  * Each {@code ThreadPoolExecutor} also maintains some basic
  * statistics, such as the number of completed tasks.
+ * ==============================================
+ * 线程池解决了两个不同的问题：由于减少了每个任务的调用开销，它们通常在执行大量异步任务时提供改进的性能，
+ * 并且它们提供了一种限制和管理资源的方法，包括在执行一组异步任务时消耗的线程任务。
+ * 每个{@code ThreadPoolExecutor}还维护一些基本的统计信息，比如完成的任务数。
  *
  * <p>To be useful across a wide range of contexts, this class
  * provides many adjustable parameters and extensibility
@@ -69,10 +73,18 @@ import java.util.concurrent.locks.ReentrantLock;
  * preconfigure settings for the most common usage
  * scenarios. Otherwise, use the following guide when manually
  * configuring and tuning this class:
+ * ===============================================
+ * 为了在广泛的上下文中有用，此类提供了许多可调整的参数和可扩展性挂钩。
+ * 但是，建议程序员使用更方便的{@link Executors}工厂方法
+ * {@link Executors#newCachedThreadPool}（无界线程池，具有自动线程回收）、
+ * {@link Executors#newFixedThreadPool}（固定大小的线程池）
+ * 和{@link Executors#newSingleThreadExecutor} （单个后台线程），
+ * 为最常见的使用场景预配置设置。否则，在手动配置和调整此类时使用以下指南：
  *
  * <dl>
  *
  * <dt>Core and maximum pool sizes</dt>
+ * 线程池参数之：核心线程数，最大线程池线程数
  *
  * <dd>A {@code ThreadPoolExecutor} will automatically adjust the
  * pool size (see {@link #getPoolSize})
