@@ -1442,23 +1442,23 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * 如果启用了超时设置，则必须在指定时间内取到任务，否则返回null
      */
     private Runnable getTask() {
-        boolean timedOut = false; // Did the last poll() time out?
+        boolean timedOut = false; // Did the last poll() time out? 记录是否超时
 
-        for (; ; ) {
-            int state = ctl.get();
+        for (; ; ) { //自旋循环
+            int state = ctl.get(); //获取状态
 
             /* Check if queue empty only if necessary */
 
             // {0123} 如果线程池结束了【运行】状态，即其不再接收新线程
-            if (runStateAtLeast(state, SHUTDOWN)) {
+            if (runStateAtLeast(state, SHUTDOWN)) { //如果说不是运行状态，不接受新的线程
 
                 // {123} 如果线程池不可以处理阻塞队列中的阻塞任务了，或者可以处理，但线程池为空
-                if (runStateAtLeast(state, STOP) || workQueue.isEmpty()) {
+                if (runStateAtLeast(state, STOP) || workQueue.isEmpty()) { //如果说不接受处理阻塞任务或者阻塞队列是空的
                     // 原子地递【减】线程池中工作线程(Worker)的数量，并更新线程池状态标记
                     decrementWorkerCount();
 
                     // 返回null意味着该【N】型Worker稍后将结束
-                    return null;
+                    return null; //不能，get不到
                 }
             }
 
@@ -1472,7 +1472,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             /*
              * 是否启用超时设置
              * 1.主动启用，可以通过设置allowCoreThreadTimeOut==true来实现
-             * 2.自动启用，发生在线程池中的Worker数量超过【核心阈值】时
+             * 2.自动启用，发生在线程池中的Worker数量超过【核心阈值】时,也就是说超容就是
              */
             boolean timed = allowCoreThreadTimeOut || workerCount > corePoolSize;
 
@@ -1508,6 +1508,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             }
 
             /* 至此，剔除了多余的【N】 */
+            //总结：上面两种情况对应的是工作线程太多了甚至超过了最大承受线程。
+            //                      启用了超时判断，超时了
 
             try {
                 Runnable task;
@@ -1545,7 +1547,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * corePoolSize workers are running or queue is non-empty but
      * there are no workers.
      *
-     * @param w the worker
+     * @param worker the worker
      * @param completedAbruptly if the worker died due to user exception
      */
     // 线程池中的某个Worker结束，除了需要将该Worker从线程池移除，还要保证阻塞队列中的阻塞任务后续有人处理
@@ -2545,8 +2547,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * should generally invoke {@code super.beforeExecute} at the end of
      * this method.
      *
-     * @param t the thread that will run task {@code r}
-     * @param r the task that will be executed
+     * @param workerThread the thread that will run task {@code r}
+     * @param runnableTask the task that will be executed
      */
     // 任务执行前的回调，位于runWorker(Worker)中
     protected void beforeExecute(Thread workerThread, Runnable runnableTask) {
@@ -2597,8 +2599,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *   }
      * }}</pre>
      *
-     * @param r the runnable that has completed
-     * @param t the exception that caused termination, or null if
+     * @param ex the runnable that has completed
+     * @param runnableTask the exception that caused termination, or null if
      * execution completed normally
      */
     // 任务执行后的回调，该方法位于runWorker(Worker)中

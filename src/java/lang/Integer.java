@@ -39,6 +39,9 @@ import static java.lang.String.UTF16;
  * The {@code Integer} class wraps a value of the primitive type
  * {@code int} in an object. An object of type {@code Integer}
  * contains a single field whose type is {@code int}.
+ * ===================
+ * {@code Integer} 类将原始类型 {@code int} 的值包装在一个对象中。
+ * {@code Integer} 类型的对象包含一个类型为 {@code int} 的字段。
  *
  * <p>In addition, this class provides several methods for converting
  * an {@code int} to a {@code String} and a {@code String} to an
@@ -181,6 +184,9 @@ public final class Integer extends Number implements Comparable<Integer> {
      * {@code String} parameter. The string is converted to an
      * {@code int} value in exactly the manner used by the
      * {@code parseInt} method for radix 10.
+     * =========================================
+     * 构造一个新分配的 {@code Integer} 对象，该对象表示由 {@code String} 参数指示的 {@code int} 值。
+     * 字符串按照 {@code parseInt} 方法使用的基数 10 的方式完全转换为 {@code int} 值。
      *
      * @param s the {@code String} to be converted to an {@code Integer}.
      *
@@ -209,6 +215,13 @@ public final class Integer extends Number implements Comparable<Integer> {
      * the constructor {@link #Integer(int)}, as this method is likely
      * to yield significantly better space and time performance by
      * caching frequently requested values.
+     * ==============================================================
+     * 返回表示指定的 {@code int} 值的 {@code Integer} 实例。
+     * 如果不需要新的 {@code Integer} 实例，则通常应优先使用此方法而不是构造函数 {@link Integer(int)}，
+     * 因为此方法可能会通过缓存频繁请求的方式产生明显更好的空间和时间性能值。
+     * 举个例子🌰：int a=3;
+     *           Integer b=a;
+     * 这个过程就发生了自动装箱的过程，相当于是Integer b=Integer.valueOf(a)
      *
      * This method will always cache values in the range -128 to 127,
      * inclusive, and may cache other values outside of this range.
@@ -2033,11 +2046,13 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     /*
      * Integer缓存，默认缓存了-128~127之间的Integer对象
+     * 这个问题就出现在为啥Integer a=127 和 Integer b=127两者完全相同，
+     * 就是因为在自动装箱调用valueOf的时候，会调用IntegerCache比较范围
      * 如果想增加缓存数字的上限，比如将缓存范围改为[-128, 200]，
      * 则可以设置运行参数：
      * -XX:AutoBoxCacheMax=200
      * 或
-     * -Djava.lang.Integer.IntegerCache.high=200
+     * -Djava.lang.Integer.IntegerCache.high=200 -----》虚拟机配置
      */
     private static class IntegerCache {
         static final int low = -128;

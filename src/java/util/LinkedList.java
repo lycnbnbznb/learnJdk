@@ -188,6 +188,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      */
     // 将指定容器中的元素追加到当前双向链表中
     public boolean addAll(Collection<? extends E> c) {
+        //size表示追加的起始位置
         return addAll(size, c);
     }
     
@@ -215,6 +216,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
         Object[] a = c.toArray();
         int numNew = a.length;
         if(numNew == 0) {
+            //如果加的没有
             return false;
         }
         
@@ -1227,6 +1229,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * iterator or an add operation.
      */
     private boolean isPositionIndex(int index) {
+        //超出数组长度判断
         return index >= 0 && index<=size;
     }
     
@@ -1246,6 +1249,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     
     private void checkPositionIndex(int index) {
         if(!isPositionIndex(index))
+            //抛异常
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
     

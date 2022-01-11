@@ -115,6 +115,7 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
     
     /**
      * Default initial capacity.
+     * 初始的默认大小是10
      */
     private static final int DEFAULT_CAPACITY = 10;
     
@@ -123,6 +124,8 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
      * Some VMs reserve some header words in an array.
      * Attempts to allocate larger arrays may result in
      * OutOfMemoryError: Requested array size exceeds VM limit
+     * ================================
+     * 数组的最大值：Integer最大值-8
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
     
@@ -1212,12 +1215,14 @@ found:
     
     // 对当前顺序表扩容
     private Object[] grow() {
+        //传了容量+1，申请的最小容量
         return grow(size + 1);
     }
     
     /**
      * Increases the capacity to ensure that it can hold at least the
      * number of elements specified by the minimum capacity argument.
+     * 增加容量以确保它至少可以容纳由最小容量参数指定的元素数量。
      *
      * @param minCapacity the desired minimum capacity
      *
@@ -1227,6 +1232,7 @@ found:
     private Object[] grow(int minCapacity) {
         // 根据申请的容量，返回一个合适的新容量
         int newCapacity = newCapacity(minCapacity);
+        //然后通过copyof复制一个新的
         return elementData = Arrays.copyOf(elementData, newCapacity);
     }
     
@@ -1236,7 +1242,7 @@ found:
      * Will not return a capacity greater than MAX_ARRAY_SIZE unless
      * the given minimum capacity is greater than MAX_ARRAY_SIZE.
      *
-     * @param minCapacity the desired minimum capacity
+     * @param minCapacity the desired minimum capacity 预期的一个最小容量
      *
      * @throws OutOfMemoryError if minCapacity is less than zero
      */
@@ -1244,17 +1250,17 @@ found:
     private int newCapacity(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = elementData.length;   // 旧容量
-        int newCapacity = oldCapacity + (oldCapacity >> 1); // 预期新容量（增加0.5倍）
+        int newCapacity = oldCapacity + (oldCapacity >> 1); // 预期新容量（增加0.5倍）扩容到原来的1.6
         
         // 如果预期新容量小于申请的容量
         if(newCapacity - minCapacity<=0) {
             // 如果数组还未初始化
             if(elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-                // 返回一个初始容量
+                // 返回一个初始容量，返回默认容量和最小申请容量的里面的最大值
                 return Math.max(DEFAULT_CAPACITY, minCapacity);
             }
             
-            // 溢出
+            // 内存溢出
             if(minCapacity<0) {
                 // overflow
                 throw new OutOfMemoryError();
@@ -1275,7 +1281,9 @@ found:
     // 将元素e添加到elementData[s]
     private void add(E e, Object[] elementData, int s) {
         // 元素填满数组时，需要扩容
+        //元素数量=元素数据的长度
         if(s == elementData.length) {
+            //进行扩容
             elementData = grow();
         }
         

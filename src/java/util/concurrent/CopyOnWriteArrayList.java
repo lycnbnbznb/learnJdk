@@ -58,6 +58,8 @@ import jdk.internal.misc.SharedSecrets;
  * A thread-safe variant of {@link java.util.ArrayList} in which all mutative
  * operations ({@code add}, {@code set}, and so on) are implemented by
  * making a fresh copy of the underlying array.
+ * ================================
+ * arraylist线程安全的类，这个是每次add/set都会复制一个新的
  *
  * <p>This is ordinarily too costly, but may be <em>more</em> efficient
  * than alternatives when traversal operations vastly outnumber
